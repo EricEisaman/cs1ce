@@ -1,0 +1,42 @@
+{
+  "name": "CS1 Engine",
+  "version": "0.0.1",
+  "description": "CS1 Engine Community Edition.",
+  "main": "server/main.js",
+  "scripts": {
+    "start": "node server/main.js",
+    "engine": "npx rollup -c --environment PROD:false,BUILD_TYPE:engine; refresh",
+    "app": "npx rollup -c --environment PROD:false,BUILD_TYPE:app; refresh"
+  },
+  "dependencies": {
+    "cs1-game-server": "^0.0.36",
+    "@codewithdan/observable-store": "^2.2.14",
+    "redux": "^4.1.2",
+    "aframe": "^1.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-json": "^4.1.0",
+    "npm-run-all": "^4.1.3",
+    "rollup": "^2.59.0",
+    "rollup-plugin-cleanup": "^3.1.1",
+    "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-replace": "^2.2.0"
+  },
+  "peerDependencies": {},
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/creative-core"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "cs1"
+  ]
+}
