@@ -2,14 +2,14 @@
 
 - First Steps
 
-  - ~~Review CS1 API boundary concept in context of CS1 game design~~
+  - ~~Review CS1 API boundary concept in context of CS1 app design~~
   - Create basic CS1 reactive store API wrapping redux
     - Review state management progress
     - Decide on API methods for first version
       - add StateManager.setInitialState()
       - add some sort of state props discovery API
-  - Create simple game using reactive store API
-    - Review and edit, where needed , the game development and build processes.
+  - Create simple app using reactive store API
+    - Review and edit, where needed , the app development and build processes.
     - Create component handling click to change state.
     - Apply this component to a simple cube.
   - CS1Scene handle no a-scene in html with state subscriber

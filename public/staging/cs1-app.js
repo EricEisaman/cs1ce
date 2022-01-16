@@ -1,10 +1,10 @@
 (function () {
 	'use strict';
 
-	// Game source code.
+	// App source code.
 	(async ()=>{
 
-	console.log("STARTING GAME ...");
+	console.log("STARTING APP ...");
 	window.box = await CS1.scene.add("a-box");
 	console.log("window.box");
 	console.log(window.box);
