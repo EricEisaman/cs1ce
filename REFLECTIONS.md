@@ -1,6 +1,17 @@
 # Reflections
 ____
 
+### The Developer Experience (DevEx)
+
+  - [DevEx](https://microsoft.github.io/code-with-engineering-playbook/developer-experience/) should be a primary driver of CS1 development.
+  - Largely influenced by the top-level API
+    - Considerations:
+        - await CS1.add.light() // adds light with default settings
+        - await CS1.add.light(true)
+          .configure(CS1.utils.spatial.positionRelativeTo('tree',[2,3,1]))
+  - Greatly enhanced by complimentary tools.
+  - Improved with a healthy community.
+
 ### End of Year 2021
 
 We want to make easy for users:
