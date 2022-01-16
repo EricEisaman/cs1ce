@@ -6,6 +6,8 @@
   - Create basic CS1 reactive store API wrapping redux
     - Review state management progress
     - Decide on API methods for first version
+      - add StateManager.setInitialState()
+      - add some sort of state props discovery API
   - Create simple game using reactive store API
     - Review and edit, where needed , the game development and build processes.
     - Create component handling click to change state.
@@ -24,6 +26,14 @@
   - A plugable will implement one or more of the core engine APIs.
   - What are these APIs?
   - What are the needs driving these APIs?
+
+
+## Blog Posts to Write
+
+  - Breadth first state tree driven development
+    - justification
+    - examples
+
 
 ## Exercise
 
