@@ -76816,10 +76816,10 @@
 	StateManager.getState = () => {
 	  return deepCopy(store.store.getState());
 	};
+	StateManager.lastState = deepCopy(InitialState);
 	StateManager.getLastState = () => {
 	  return deepCopy(StateManager.lastState);
 	};
-	StateManager.lastState = deepCopy(InitialState);
 	DispatchManager.setStore(store);
 	/*
 	 The decision to include the last state in dispatch is a current consideration
@@ -76847,6 +76847,13 @@
 	    console.log("last value: ", lastValue);
 	    console.log("current value: ", currentValue);
 	    if (!equals(lastValue, currentValue)) {
+	      /*
+	       I need to know if the current subscription.slice
+	       is the same slice mutation that caused this call.
+	       By passing the slice mutation to the superpath
+	       subscription handler, the handler doesn't have to 
+	       find out what specific thing(s) changed.
+	      */
 	      console.log("Calling subscription handler.");
 	      subscription.handler();
 	      /*
