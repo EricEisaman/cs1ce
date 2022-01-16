@@ -10,9 +10,7 @@
   },
   "dependencies": {
     "cs1-game-server": "^0.0.36",
-    "@codewithdan/observable-store": "^2.2.14",
-    "redux": "^4.1.2",
-    "aframe": "^1.2.0"
+    "redux": "^4.1.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",

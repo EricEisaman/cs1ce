@@ -65,6 +65,45 @@ export const utils = {
 
     return true;
   },
+
+  deepCopy: (inObject) => {
+    let outObject, value, key;
+
+    if (typeof inObject !== "object" || inObject === null) {
+      return inObject; // Return the value if inObject is not an object
+    }
+
+    // Create an array or object to hold the values
+    outObject = Array.isArray(inObject) ? [] : {};
+
+    for (key in inObject) {
+      value = inObject[key];
+
+      // Recursively (deep) copy for nested objects, including arrays
+      outObject[key] = utils.deepCopy(value);
+    }
+
+    return outObject;
+  },
+
+  getDecendantProp: function (obj, desc) {
+    var arr = desc.split(".");
+    while (arr.length) {
+      obj = obj[arr.shift()];
+    }
+    return obj;
+  },
+
+  setDecendantProp: function (obj, desc, value) {
+    var arr = desc.split(".");
+    while (arr.length > 1) {
+      obj = obj[arr.shift()];
+    }
+    return (obj[arr[0]] = value);
+  },
 };
 
 export const equals = utils.equals;
+export const deepCopy = utils.deepCopy;
+export const getDecendantProp = utils.getDecendantProp;
+export const setDecendantProp = utils.setDecendantProp;

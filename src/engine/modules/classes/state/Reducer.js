@@ -1,3 +1,4 @@
+import { deepCopy , setDecendantProp } from "../../utils.js";
 /*
 The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
 
@@ -23,42 +24,11 @@ export class Reducer {
 
   pathMutation(state, action) {
     let result = state;
+    const path = action.payload.path;
     const value = action.payload.value;
-    const keys = action.payload.path.split(".");
-    switch (keys.length) {
-      case 2:
-        result[keys[0]][keys[1]] = value;
-        break;
-      case 3:
-        result[keys[0]][keys[1]][keys[2]] = value;
-        break;
-      case 4:
-        result[keys[0]][keys[1]][keys[2]][keys[3]] = value;
-        break;
-      case 5:
-        result[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]] = value;
-        break;
-      case 6:
-        result[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]][keys[5]] = value;
-        break;
-    }
+    setDecendantProp(result, path, value);
+    console.log("Reaction returning : ", result);
     return result;
-  }
-
-  upstreamNodeDispatchHandler(branchState, nodeToNotify) {
-    /*
-      Example:  subscription to house.rooms.bathroom.locked
-      Here we will call locked the subscription node, which in general does not have to be a leaf.
-      A path-mutation type action is dispatched with the payload path of house.rooms.bathroom.locked
-      This will return the resulting subscription node value.
-      It will also trigger a caching of the branchState to that leaf.
-      We will also need to always have a global lastState cache to check when an
-      upstream-node-notification action is dispatched, 
-      whether or not the children are all clean.
-    */
-    let result = state;
-    const value = action.payload.value;
-    const keys = action.payload.path.split(".");
   }
 
   add(state, action) {
@@ -70,7 +40,7 @@ export class Reducer {
       return result;
     } else {
       result[action.type] = action.payload[action.type];
-      console.log("Returning : ", result);
+      console.log("Reaction returning : ", result);
       return result;
     }
   }
@@ -106,9 +76,9 @@ export class Reducer {
       if (reaction) {
         console.log("Reaction found!");
         console.log(reaction);
-        return reaction.mutation(state, action);
+        return reaction.mutation(deepCopy(state), action);
       } else {
-        return this.addReplace(state, action);
+        return this.addReplace(deepCopy(state), action);
       }
     };
   }

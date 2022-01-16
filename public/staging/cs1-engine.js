@@ -76559,146 +76559,6 @@
 	  }, _ref2[$$observable] = observable, _ref2;
 	}
 
-	/*
-	The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
-
-	The engine will create reactions for the user based upon the globally tracked and shared state.
-	*/
-	class Reducer {
-	  constructor(StateManager) {
-	    this.reactions = [
-	      { type: "username", mutation: this.addReplace },
-	      { type: "level", mutation: this.addReplace },
-	      { type: "appId", mutation: this.addReplace },
-	      { type: "newProp", mutation: this.add },
-	      { type: "replacementProp", mutation: this.replace },
-	      { type: "house", mutation: this.addReplace },
-	      { type: "path-mutation", mutation: this.pathMutation },
-	      {
-	        type: "upstream-node-notification",
-	        mutation: this.upstreamNodeDispatchHandler,
-	      },
-	    ];
-	    this.createReducer();
-	  }
-
-	  pathMutation(state, action) {
-	    let result = state;
-	    const value = action.payload.value;
-	    const keys = action.payload.path.split(".");
-	    switch (keys.length) {
-	      case 2:
-	        result[keys[0]][keys[1]] = value;
-	        break;
-	      case 3:
-	        result[keys[0]][keys[1]][keys[2]] = value;
-	        break;
-	      case 4:
-	        result[keys[0]][keys[1]][keys[2]][keys[3]] = value;
-	        break;
-	      case 5:
-	        result[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]] = value;
-	        break;
-	      case 6:
-	        result[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]][keys[5]] = value;
-	        break;
-	    }
-	    return result;
-	  }
-
-	  upstreamNodeDispatchHandler(branchState, nodeToNotify) {
-	    /*
-	      Example:  subscription to house.rooms.bathroom.locked
-	      Here we will call locked the subscription node, which in general does not have to be a leaf.
-	      A path-mutation type action is dispatched with the payload path of house.rooms.bathroom.locked
-	      This will return the resulting subscription node value.
-	      It will also trigger a caching of the branchState to that leaf.
-	      We will also need to always have a global lastState cache to check when an
-	      upstream-node-notification action is dispatched, 
-	      whether or not the children are all clean.
-	    */
-	    state;
-	    action.payload.value;
-	    action.payload.path.split(".");
-	  }
-
-	  add(state, action) {
-	    let result = state;
-	    if (result[action.type]) {
-	      console.log(
-	        "Add mutation called for state property that already exists!"
-	      );
-	      return result;
-	    } else {
-	      result[action.type] = action.payload[action.type];
-	      console.log("Returning : ", result);
-	      return result;
-	    }
-	  }
-
-	  replace(state, action) {
-	    let result = state;
-	    if (result[action.type]) {
-	      result[action.type] = action.payload[action.type];
-	      console.log("Returning : ", result);
-	      return result;
-	    } else {
-	      console.log(
-	        "Replace mutation called for state property that does not exist!"
-	      );
-	      return result;
-	    }
-	  }
-
-	  addReplace(state, action) {
-	    let result = state;
-	    const type = action.type;
-	    if (type && action.payload && action.payload[type]) {
-	      result[type] = action.payload[type];
-	    }
-	    return result;
-	  }
-
-	  createReducer() {
-	    this.reducer = (state, action) => {
-	      console.log(`Searching the reactions for action.type : ${action.type}`);
-	      console.log("reactions: ", this.reactions);
-	      const reaction = this.reactions.filter((r) => r.type === action.type)[0];
-	      if (reaction) {
-	        console.log("Reaction found!");
-	        console.log(reaction);
-	        return reaction.mutation(state, action);
-	      } else {
-	        return this.addReplace(state, action);
-	      }
-	    };
-	  }
-	}
-
-	let InitialState = {
-	  appId: 1,
-	  house: {
-	    rooms: {
-	      livingRoom: { occupied: false, locked: false },
-	      kitchen: { occupied: false, locked: false },
-	      bathroom: { occupied: false, locked: false }
-	    },
-	    securityEnabled: false
-	  }
-	};
-
-	class GlobalStore {
-	  constructor(StateManager) {
-	    this.reducer = new Reducer(StateManager);
-	    this.store = createStore(
-	      this.reducer.reducer,
-	      InitialState,
-	      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-	        window.__REDUX_DEVTOOLS_EXTENSION__()
-	    );
-	  }
-	}
-
 	const utils = {
 	  loadScript: function (url) {
 	    return new Promise(function (resolve, reject) {
@@ -76766,36 +76626,182 @@
 
 	    return true;
 	  },
+
+	  deepCopy: (inObject) => {
+	    let outObject, value, key;
+
+	    if (typeof inObject !== "object" || inObject === null) {
+	      return inObject; // Return the value if inObject is not an object
+	    }
+
+	    // Create an array or object to hold the values
+	    outObject = Array.isArray(inObject) ? [] : {};
+
+	    for (key in inObject) {
+	      value = inObject[key];
+
+	      // Recursively (deep) copy for nested objects, including arrays
+	      outObject[key] = utils.deepCopy(value);
+	    }
+
+	    return outObject;
+	  },
+
+	  getDecendantProp: function (obj, desc) {
+	    var arr = desc.split(".");
+	    while (arr.length) {
+	      obj = obj[arr.shift()];
+	    }
+	    return obj;
+	  },
+
+	  setDecendantProp: function (obj, desc, value) {
+	    var arr = desc.split(".");
+	    while (arr.length > 1) {
+	      obj = obj[arr.shift()];
+	    }
+	    return (obj[arr[0]] = value);
+	  },
 	};
 
 	const equals = utils.equals;
+	const deepCopy = utils.deepCopy;
+	const getDecendantProp = utils.getDecendantProp;
+	const setDecendantProp = utils.setDecendantProp;
 
+	/*
+	The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
+
+	The engine will create reactions for the user based upon the globally tracked and shared state.
+	*/
+	class Reducer {
+	  constructor(StateManager) {
+	    this.reactions = [
+	      { type: "username", mutation: this.addReplace },
+	      { type: "level", mutation: this.addReplace },
+	      { type: "appId", mutation: this.addReplace },
+	      { type: "newProp", mutation: this.add },
+	      { type: "replacementProp", mutation: this.replace },
+	      { type: "house", mutation: this.addReplace },
+	      { type: "path-mutation", mutation: this.pathMutation },
+	      {
+	        type: "upstream-node-notification",
+	        mutation: this.upstreamNodeDispatchHandler,
+	      },
+	    ];
+	    this.createReducer();
+	  }
+
+	  pathMutation(state, action) {
+	    let result = state;
+	    const path = action.payload.path;
+	    const value = action.payload.value;
+	    setDecendantProp(result, path, value);
+	    console.log("Reaction returning : ", result);
+	    return result;
+	  }
+
+	  add(state, action) {
+	    let result = state;
+	    if (result[action.type]) {
+	      console.log(
+	        "Add mutation called for state property that already exists!"
+	      );
+	      return result;
+	    } else {
+	      result[action.type] = action.payload[action.type];
+	      console.log("Reaction returning : ", result);
+	      return result;
+	    }
+	  }
+
+	  replace(state, action) {
+	    let result = state;
+	    if (result[action.type]) {
+	      result[action.type] = action.payload[action.type];
+	      console.log("Returning : ", result);
+	      return result;
+	    } else {
+	      console.log(
+	        "Replace mutation called for state property that does not exist!"
+	      );
+	      return result;
+	    }
+	  }
+
+	  addReplace(state, action) {
+	    let result = state;
+	    const type = action.type;
+	    if (type && action.payload && action.payload[type]) {
+	      result[type] = action.payload[type];
+	    }
+	    return result;
+	  }
+
+	  createReducer() {
+	    this.reducer = (state, action) => {
+	      console.log(`Searching the reactions for action.type : ${action.type}`);
+	      console.log("reactions: ", this.reactions);
+	      const reaction = this.reactions.filter((r) => r.type === action.type)[0];
+	      if (reaction) {
+	        console.log("Reaction found!");
+	        console.log(reaction);
+	        return reaction.mutation(deepCopy(state), action);
+	      } else {
+	        return this.addReplace(deepCopy(state), action);
+	      }
+	    };
+	  }
+	}
+
+	let InitialState = {
+	  appId: 1,
+	  house: {
+	    rooms: {
+	      livingRoom: { occupied: false, locked: false },
+	      kitchen: { occupied: false, locked: false },
+	      bathroom: { occupied: false, locked: false }
+	    },
+	    securityEnabled: false
+	  }
+	};
+
+	class GlobalStore {
+	  constructor(StateManager) {
+	    this.reducer = new Reducer(StateManager);
+	    this.store = createStore(
+	      this.reducer.reducer,
+	      InitialState,
+	      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+	        window.__REDUX_DEVTOOLS_EXTENSION__()
+	    );
+	  }
+	}
+
+	/*
+	The DispatchManager was originally created to run conditional
+	logic related to the path-mutation action type.  This intermediary
+	may not be required any longer as the superpath subscription handlers
+	are now taken care of by using deep cloning , deep equality checks  ,
+	and getting descendant property values at path.
+	*/
 	const DispatchManager = {
 	  setStore: function(store){
 	    DispatchManager.store = store;
 	  },
 	  dispatch: function(action , lastState){
-	    /*
-	    If a path-mutation action type is received,
-	    we must split the path and iterate over the 
-	    upstream nodes calling upstream-node-notification
-	    action type dispatches to each upstream sub-path.
-	    
-	    WHAT WE WANT TO AVOID IS TRIGGERING ANY DISPATCHES
-	    TO SUPER-PATHS. I NEED TO IDENTIFY AND IMPLEMENT
-	    THE CHECKS AND RESPONSES TO ACHIEVE THIS.
-	    */
 	    if(action.type === "path-mutation"){
 	      DispatchManager.store.store.dispatch(action);
 	    }
 	  }
 	};
 
-	// Manages data requiring updating via the network.
-
-	// This will handle the transport of only dirty values!
+	/*
+	 We will only transport dirty values!
+	 Consider sending only the dirty values at each level!
+	*/
 	function markForNetworkUpdate(slice){
-	  console.log(`Marking slice : ${slice} for update.`);
+	  console.log(`Marking slice : ${slice} for network update.`);
 	}
 
 	// Currently exposing dispatch. Eventually dispatch will be conducted under the hood.
@@ -76808,12 +76814,20 @@
 	};
 	const store = new GlobalStore(StateManager);
 	StateManager.getState = () => {
-	  return { ...store.store.getState() };
+	  return deepCopy(store.store.getState());
 	};
-	StateManager.lastState = {...InitialState};
+	StateManager.getLastState = () => {
+	  return deepCopy(StateManager.lastState);
+	};
+	StateManager.lastState = deepCopy(InitialState);
 	DispatchManager.setStore(store);
+	/*
+	 The decision to include the last state in dispatch is a current consideration
+	 but can very likely be revoked. In fact the need for the DispatchManager is
+	 under reconsideration.
+	*/
 	StateManager.dispatch = (action)=>{
-	  DispatchManager.dispatch(action , StateManager.lastState);
+	  DispatchManager.dispatch(action , StateManager.getLastState());
 	};
 	const subscriptions = [];
 
@@ -76821,67 +76835,29 @@
 	  subscriptions.push({ slice: slice, handler: handler });
 	}
 
-	// Start off with naive O(n^2) approach
-	// Later implement pre-processing in addSubcription to group
-	// all subscriptions within superpaths
-	// a balanced state graph will optimize then to O(n*log(n))
-	function callSuperpathSubscriptionHandlers(keys) {
-	  subscriptions.forEach(function (subscription) {
-	    const superpaths = [];
-	    superpaths.push(`${keys[0]}`);
-	    if (keys.length > 2) {
-	      superpaths.push(`${keys[0]}.${keys[1]}`);
-	    }
-	    if (keys.length > 3) {
-	      superpaths.push(`${keys[0]}.${keys[1]}.${keys[2]}`);
-	    }
-	    if (keys.length > 4) {
-	      superpaths.push(`${keys[0]}.${keys[1]}.${keys[2]}.${keys[3]}`);
-	    }
-	    if (keys.length > 5) {
-	      superpaths.push(`${keys[0]}.${keys[1]}.${keys[2]}.${keys[3]}.${keys[4]}`);
-	    }
-	    superpaths.forEach((sp) => {
-	      if (subscription.slice === sp) {
-	        console.log("Calling subscription handler of superpath.");
-	        subscription.handler();
-	      }
-	    });
-	  });
-	}
-
 	function globalHandler() {
 	  console.log("Running global handler!");
+	  const lastState = StateManager.getLastState();
 	  const currentState = StateManager.getState();
 	  subscriptions.forEach(function (subscription) {
-	    subscription.isPath = subscription.slice.includes(".");
-	    const keys = subscription.slice.split(".");
-	    let currentValue = currentState;
-	    keys.forEach(function (key) {
-	      if (currentValue) {
-	        currentValue = currentValue[key];
-	      }
-	    });
-	    let previousValue = {...StateManager.lastState};
-	    keys.forEach(function (key) {
-	      console.log("key: ", key);
-	      if (previousValue) {
-	        previousValue = previousValue[key];
-	        console.log(previousValue);
-	      }
-	    });
-	    console.log("previous value: ", previousValue);
+
+	    let currentValue = getDecendantProp(currentState , subscription.slice);    
+	    let lastValue = getDecendantProp(lastState , subscription.slice);    
+	    
+	    console.log("last value: ", lastValue);
 	    console.log("current value: ", currentValue);
-	    if (!equals(previousValue, currentValue)) {
+	    if (!equals(lastValue, currentValue)) {
 	      console.log("Calling subscription handler.");
 	      subscription.handler();
+	      /*
+	       Currently marking everything for network update.
+	       I will eventually add a filter here.
+	      */
 	      console.log("Alerting Network Update Manager!");
 	      markForNetworkUpdate(subscription.slice);
-	      if (subscription.isPath) {
-	        callSuperpathSubscriptionHandlers(keys);
-	      }
 	    }
 	  });
+	  StateManager.lastState = currentState;
 	}
 
 	store.store.subscribe(globalHandler);
