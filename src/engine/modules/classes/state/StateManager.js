@@ -9,16 +9,24 @@ export const StateManager = {
 
 import { GlobalStore } from "./GlobalStore.js";
 const store = new GlobalStore(StateManager);
+import { equals , deepCopy , getDecendantProp } from "../../utils.js";
 StateManager.getState = () => {
-  return { ...store.store.getState() };
+  return deepCopy(store.store.getState());
 };
-import { equals } from "../../utils.js";
+StateManager.getLastState = () => {
+  return deepCopy(StateManager.lastState);
+}
 import { InitialState } from "./InitialState.js";
-StateManager.lastState = {...InitialState};
+StateManager.lastState = deepCopy(InitialState);
 import { DispatchManager } from "./DispatchManager.js";
 DispatchManager.setStore(store);
+/*
+ The decision to include the last state in dispatch is a current consideration
+ but can very likely be revoked. In fact the need for the DispatchManager is
+ under reconsideration.
+*/
 StateManager.dispatch = (action)=>{
-  DispatchManager.dispatch(action , StateManager.lastState);
+  DispatchManager.dispatch(action , StateManager.getLastState());
 };
 import {
   initNetworkUpdateManager,
@@ -35,7 +43,8 @@ function addSubscription(slice, handler) {
 // Later implement pre-processing in addSubcription to group
 // all subscriptions within superpaths
 // a balanced state graph will optimize then to O(n*log(n))
-function callSuperpathSubscriptionHandlers(keys) {
+function callSuperpathSubscriptionHandlers(slice) {
+  const keys = slice.split(".");
   subscriptions.forEach(function (subscription) {
     const superpaths = [];
     superpaths.push(`${keys[0]}`);
@@ -60,19 +69,18 @@ function callSuperpathSubscriptionHandlers(keys) {
   });
 }
 
-function globalHandler() {
+function globalHandler_() {
   console.log("Running global handler!");
-  const currentState = StateManager.getState();
   subscriptions.forEach(function (subscription) {
     subscription.isPath = subscription.slice.includes(".");
     const keys = subscription.slice.split(".");
-    let currentValue = currentState;
+    let currentValue = StateManager.getState();
     keys.forEach(function (key) {
       if (currentValue) {
         currentValue = currentValue[key];
       }
     });
-    let previousValue = JSON.parse(JSON.stringify(StateManager.lastState));
+    let previousValue = StateManager.getLastState();
     keys.forEach(function (key) {
       console.log("key: ", key);
       if (previousValue) {
@@ -92,6 +100,31 @@ function globalHandler() {
       }
     }
   });
+}
+
+function globalHandler() {
+  console.log("Running global handler!");
+  const lastState = StateManager.getLastState();
+  const currentState = StateManager.getState();
+  subscriptions.forEach(function (subscription) {
+
+    let currentValue = getDecendantProp(currentState , subscription.slice);    
+    let lastValue = getDecendantProp(lastState , subscription.slice);    
+    
+    console.log("last value: ", lastValue);
+    console.log("current value: ", currentValue);
+    if (!equals(lastValue, currentValue)) {
+      console.log("Calling subscription handler.");
+      subscription.handler();
+      /*
+       Currently marking everything for network update.
+       I will eventually add a filter here.
+      */
+      console.log("Alerting Network Update Manager!");
+      markForNetworkUpdate(subscription.slice);
+    }
+  });
+  StateManager.lastState = currentState;
 }
 
 store.store.subscribe(globalHandler);
