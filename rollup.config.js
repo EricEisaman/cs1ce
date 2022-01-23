@@ -4,7 +4,8 @@ import json from "@rollup/plugin-json";
 import { string } from "rollup-plugin-string";
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
 
 console.log("process.env: ");
 console.log(process.env);
@@ -12,26 +13,35 @@ console.log(process.env);
 const prod = (process.env.PROD === "true");
 const buildType = process.env.BUILD_TYPE;
 const version = process.env.VERSION;
-let i, o;
+let i, o, n;
 
 switch (buildType) {
   case "engine":
     i = "src/engine/main.js";
     o = prod
-      ? `dist/${process.env.VERSION}/cs1-engine.min.js`
-      : `public/staging/cs1-engine.js`;
+      ? `dist/${process.env.VERSION}/`
+      : `public/staging/`;
+    n = prod
+      ? `cs1-engine.min.js`
+      : `cs1-engine.js`;
     break;
   case "app":
-    i = "src/app/main.js";
+    i = "src/app/main.ts";
     o = prod
       ? `dist/${process.env.VERSION}/cs1-app.min.js`
-      : `public/staging/cs1-app.js`;
+      : `public/staging/`;
+    n = prod
+      ? `cs1-app.min.js`
+      : `cs1-app.js`;
     break;
   case "socket":
     i = "src/engine/modules/socket.js";
     o = prod
-      ? `dist/${process.env.VERSION}/cs1-socket.min.js`
-      : `public/staging/cs1-socket.min.js`;
+      ? `dist/${process.env.VERSION}/`
+      : `public/staging/`;
+    n = prod
+      ? `cs1-socket.min.js`
+      : `cs1-socket.js`;
     break;
 }
 
@@ -44,17 +54,23 @@ console.log("o: ", o);
 export default {
   input: i,
   output: {
-    file: o,
+    dir: o,
+    entryFileNames: n,
     format: "iife", // immediately-invoked function expression — suitable for <script> tags
     sourcemap: (buildType=='game') || !prod,
     name: "CS1"
   },
   plugins: [
+    typescript({
+      tsconfig: false,
+      target: "es2020"
+    }),
     nodeResolve(),
     commonjs(),
     ,
     replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'preventAssignment': true
     }),
     json(),
     string({
@@ -70,3 +86,4 @@ export default {
     prod && terser() // minify, but only in production
   ]
 };
+
