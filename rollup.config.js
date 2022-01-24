@@ -49,7 +49,7 @@ console.log("prod: ", prod);
 console.log("buildType: ", buildType);
 console.log("version: ", version);
 console.log("i: ", i);
-console.log("o: ", o);
+console.log(`o:  ${o}${n}`);
 
 export default {
   input: i,

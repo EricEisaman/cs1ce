@@ -13,4 +13,7 @@ console.log(`The TypeScript number called decimal has a value of : ${decimal}!`)
  
 })()
 
-import StateTest from "./modules/scripts/StateTest.js";
+import { StateTest } from "./modules/classes/StateTest";
+
+const myStateTest = new StateTest();
+myStateTest.run();
