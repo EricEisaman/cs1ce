@@ -1,4 +1,4 @@
-import { deepCopy , setDecendantProp } from "../../utils.js";
+import { deepCopy, setDecendantProp } from "../../utils.js";
 /*
 The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
 
@@ -76,9 +76,10 @@ export class Reducer {
       if (reaction) {
         console.log("Reaction found!");
         console.log(reaction);
-        return reaction.mutation(deepCopy(state), action);
+        console.log(`The action.payload.path is ${action.payload.path}.`);
+        return reaction.mutation(state, action);
       } else {
-        return this.addReplace(deepCopy(state), action);
+        return this.addReplace(state, action);
       }
     };
   }

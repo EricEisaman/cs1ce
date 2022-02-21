@@ -5,19 +5,19 @@ export const StateManager = {
   dispatch: null,
 
   subscribe: addSubscription,
+
+  unsubscribe: removeSubscription,
+
 };
 
 import { GlobalStore } from "./GlobalStore.js";
 const store = new GlobalStore(StateManager);
-import { equals , deepCopy , getDecendantProp } from "../../utils.js";
+import { uuid, equals, deepCopy, getDecendantProp } from "../../utils.js";
 StateManager.getState = () => {
-  return deepCopy(store.store.getState());
+  return store.store.getState();
 };
 import { InitialState } from "./InitialState.js";
 StateManager.lastState = deepCopy(InitialState);
-StateManager.getLastState = () => {
-  return deepCopy(StateManager.lastState);
-}
 import { DispatchManager } from "./DispatchManager.js";
 DispatchManager.setStore(store);
 /*
@@ -25,32 +25,47 @@ DispatchManager.setStore(store);
  but can very likely be revoked. In fact the need for the DispatchManager is
  under reconsideration.
 */
-StateManager.dispatch = (action)=>{
-  DispatchManager.dispatch(action , StateManager.getLastState());
+StateManager.dispatch = (action) => {
+  DispatchManager.dispatch(action, StateManager.lastState);
 };
 import {
   initNetworkUpdateManager,
   markForNetworkUpdate,
 } from "./NetworkUpdateManager.js";
 initNetworkUpdateManager(StateManager);
-const subscriptions = [];
+let subscriptions = [];
 
 function addSubscription(slice, handler) {
-  subscriptions.push({ slice: slice, handler: handler });
+  const id = uuid();
+  subscriptions.push({ id: id, slice: slice, handler: handler });
+  return id;
+}
+
+function removeSubscription(id) {
+  subscriptions = subscriptions.filter((s) => s.id !== id);
 }
 
 function globalHandler() {
   console.log("Running global handler!");
-  const lastState = StateManager.getLastState();
+  const lastState = StateManager.lastState;
   const currentState = StateManager.getState();
+  console.log("Last State :");
+  console.log(lastState);
+  console.log("Current State :");
+  console.log(currentState);
   subscriptions.forEach(function (subscription) {
+    let currentValue = getDecendantProp(currentState, subscription.slice);
+    let lastValue = getDecendantProp(lastState, subscription.slice);
 
-    let currentValue = getDecendantProp(currentState , subscription.slice);    
-    let lastValue = getDecendantProp(lastState , subscription.slice);    
-    
-    console.log("last value: ", lastValue);
-    console.log("current value: ", currentValue);
+    console.log("last prop value: ", lastValue);
+    console.log("current prop value: ", currentValue);
     if (!equals(lastValue, currentValue)) {
+      /*
+       Currently marking everything for network update.
+       I will eventually add a filter here.
+      */
+      console.log("Alerting Network Update Manager!");
+      markForNetworkUpdate(subscription.slice);
       /*
        I need to know if the current subscription.slice
        is the same slice mutation that caused this call.
@@ -60,15 +75,9 @@ function globalHandler() {
       */
       console.log("Calling subscription handler.");
       subscription.handler();
-      /*
-       Currently marking everything for network update.
-       I will eventually add a filter here.
-      */
-      console.log("Alerting Network Update Manager!");
-      markForNetworkUpdate(subscription.slice);
+      StateManager.lastState = deepCopy(currentState);
     }
   });
-  StateManager.lastState = currentState;
 }
 
 store.store.subscribe(globalHandler);
