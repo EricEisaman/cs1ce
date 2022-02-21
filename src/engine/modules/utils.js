@@ -1,16 +1,44 @@
 export const utils = {
-  loadScript: function (url) {
+  loadScript: function (url, test) {
     return new Promise(function (resolve, reject) {
       var head = document.getElementsByTagName("head")[0];
       var script = document.createElement("script");
       script.type = "text/javascript";
       script.addEventListener("load", function () {
         this.removeEventListener("load", this);
-        resolve(script);
+        if (test) {
+          utils.resolveWhenTrue(resolve, reject, test);
+        } else {
+          console.log("Resolving loadScript in utils!");
+          resolve();
+        }
       });
       script.src = url;
       head.appendChild(script);
     });
+  },
+
+  resolveWhenTrue: function (resolve, reject, test) {
+    let count = 0;
+    setTimeout(() => {
+      if (test) {
+        resolve();
+      } else if (count < 1000) {
+        utils.resolveWhenTrue(resolve, test);
+        count++;
+      } else {
+        reject(test);
+      }
+    }, 200);
+  },
+
+  uuid: function () {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
   },
 
   equals: function (a, b) {
@@ -103,6 +131,8 @@ export const utils = {
   },
 };
 
+export const uuid = utils.uuid;
+export const loadScript = utils.loadScript;
 export const equals = utils.equals;
 export const deepCopy = utils.deepCopy;
 export const getDecendantProp = utils.getDecendantProp;
