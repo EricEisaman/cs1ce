@@ -4,6 +4,27 @@
 
 ---
 
+### CS1 as a Library
+
+- Acting as a utility that fulfills a subset of your needs.
+
+___
+
+### CS1 as a Framework
+
+- Provides an opinionated set of architectural components that fullfill all your application needs.
+
+
+___
+
+### CS1 as a Platform
+
+- Provides deployment alternatives to Glitch, Heroku, AWS, on prem .....
+
+- Provides CI/CD particular to the backend host.
+
+___
+
 ### Distribution, Versioning, Cache
 
 [webxr pwa apk](https://timmykokke.com/blog/2021-11-05-webxr-pwa-apk/)
@@ -132,3 +153,13 @@ ____
 ### Design Tools
 
 [Three Node Editor](http://raw.githack.com/sunag/three.js/dev-scene-apply/examples/index.html?q=playground#webgl_nodes_playground)
+
+___
+
+### Microservices
+
+**ETL** 
+ - [Modular ETL Architecture](https://www.sqlshack.com/designing-a-modular-etl-architecture/)
+ 
+ - [Top dbaas of 2022](https://www.trustradius.com/database-as-a-service-dbaas)
+
