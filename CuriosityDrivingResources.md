@@ -118,3 +118,17 @@ ___
 ### 3D UI
 
 [Three Mesh UI](https://github.com/felixmariotto/three-mesh-ui)
+
+[CSS3D YouTube Example](https://threejs.org/examples/css3d_youtube.html)
+
+[CSS3D Renderer](https://threejs.org/docs/#examples/en/renderers/CSS3DRenderer)
+
+[CSS3D YouTube Hide If Overlays Present](https://jsfiddle.net/guam/2jzLch4r/3/)
+
+[html2canvas](https://github.com/niklasvh/html2canvas)
+
+____
+
+### Design Tools
+
+[Three Node Editor](http://raw.githack.com/sunag/three.js/dev-scene-apply/examples/index.html?q=playground#webgl_nodes_playground)
