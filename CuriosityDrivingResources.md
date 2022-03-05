@@ -162,4 +162,12 @@ ___
  - [Modular ETL Architecture](https://www.sqlshack.com/designing-a-modular-etl-architecture/)
  
  - [Top dbaas of 2022](https://www.trustradius.com/database-as-a-service-dbaas)
+ 
+ ___
+ 
+ ### Utils
+ 
+ [Font Textures](https://glitch.com/~font-texture)
+ 
+ [URL Params](https://gist.github.com/ssssss45/dd857d2132d091bc272eea1b7c85964f)
 
