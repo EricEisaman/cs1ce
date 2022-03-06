@@ -170,4 +170,10 @@ ___
  [Font Textures](https://glitch.com/~font-texture)
  
  [URL Params](https://gist.github.com/ssssss45/dd857d2132d091bc272eea1b7c85964f)
+ 
+ ___
+ 
+ ### Blog
+ 
+ [Hugo Template](https://github.com/strawstack/HugoGlitch)
 
