@@ -8,14 +8,13 @@
 
 - Acting as a utility that fulfills a subset of your needs.
 
-___
+---
 
 ### CS1 as a Framework
 
 - Provides an opinionated set of architectural components that fullfill all your application needs.
 
-
-___
+---
 
 ### CS1 as a Platform
 
@@ -23,7 +22,7 @@ ___
 
 - Provides CI/CD particular to the backend host.
 
-___
+---
 
 ### Distribution, Versioning, Cache
 
@@ -40,6 +39,12 @@ ___
 ### Application State
 
 [reactive stores - Redux](https://youtu.be/35kUY7J7EEc)
+
+[mobx-state-tree](https://mobx-state-tree.js.org/)
+
+[mobx-state-tree inspect root in dev tools](https://github.com/mobxjs/mobx-devtools/blob/master/README.md#mobx-state-tree)
+
+[mst-persist](https://github.com/agilgur5/mst-persist)
 
 ---
 
@@ -89,6 +94,22 @@ ___
 
 [Procedural Animations](https://glitch.com/edit/#!/c19sim?path=agents%2Fagents_vertex_shader.js%3A1%3A0)
 
+[Lamina Three.js Shader System](https://github.com/pmndrs/lamina)
+
+---
+
+### Projects to Watch
+
+[SimonDev YouTube Video](https://www.youtube.com/watch?v=SBfZAVzbhCg)
+
+[SimonDev GitHub](https://github.com/simondevyoutube/)
+
+[SimonDev RPG](https://glitch.com/edit/#!/simondevrpg?path=LICENSE%3A1%3A0)
+
+[Simon Dev LinkedIn](https://www.linkedin.com/in/simonmakela/)
+
+[Simon Dev Twitter](https://twitter.com/simondev_yt?lang=en)
+
 ---
 
 ### Math References
@@ -114,11 +135,20 @@ ___
 ### Worker Threads
 
 [Surma Vid](https://youtu.be/7Rrv9qFMWNM)
+
 [comlink by Surma](https://www.npmjs.com/package/comlink)
+
+[HTTP 203 is postMessage slow](https://youtu.be/D61EQuTqvvY)
+
 [rollup with workers](https://github.com/surma/rollup-plugin-off-main-thread)
+
 [Other Surma Packages](https://www.npmjs.com/~surma)
 
----
+[SharedArrayBuffers needed in iframes anonymous iframe proposal](https://github.com/camillelamy/explainers/blob/main/anonymous_iframes.md)
+
+[Anonymous iframes Chromium feature status](https://chromestatus.com/feature/5729461725036544#:~:text=Feature%3A%20Anonymous%20iframes,storage%20APIs%20and%20register%20cookies.)
+
+[Export GLTF from THREE using Worker](https://github.com/robertlong/three-gltf-exporter-webworker)
 
 ### String Manipulation
 
@@ -134,7 +164,7 @@ ___
 
 [Deno Texa](https://glitch.com/edit/#!/texa-starter)
 
-___
+---
 
 ### 3D UI
 
@@ -148,32 +178,38 @@ ___
 
 [html2canvas](https://github.com/niklasvh/html2canvas)
 
-____
+---
 
 ### Design Tools
 
 [Three Node Editor](http://raw.githack.com/sunag/three.js/dev-scene-apply/examples/index.html?q=playground#webgl_nodes_playground)
 
-___
+---
 
 ### Microservices
 
-**ETL** 
- - [Modular ETL Architecture](https://www.sqlshack.com/designing-a-modular-etl-architecture/)
- 
- - [Top dbaas of 2022](https://www.trustradius.com/database-as-a-service-dbaas)
- 
- ___
- 
- ### Utils
- 
- [Font Textures](https://glitch.com/~font-texture)
- 
- [URL Params](https://gist.github.com/ssssss45/dd857d2132d091bc272eea1b7c85964f)
- 
- ___
- 
- ### Blog
- 
- [Hugo Template](https://github.com/strawstack/HugoGlitch)
+**ETL**
 
+- [Modular ETL Architecture](https://www.sqlshack.com/designing-a-modular-etl-architecture/)
+
+- [Top dbaas of 2022](https://www.trustradius.com/database-as-a-service-dbaas)
+
+---
+
+### Utils
+
+[Font Textures](https://glitch.com/~font-texture)
+
+[URL Params](https://gist.github.com/ssssss45/dd857d2132d091bc272eea1b7c85964f)
+
+---
+
+### Blog
+
+[Hugo Template](https://github.com/strawstack/HugoGlitch)
+
+---
+
+### IDE Possibilities
+
+[Tauri](https://github.com/tauri-apps/tauri)

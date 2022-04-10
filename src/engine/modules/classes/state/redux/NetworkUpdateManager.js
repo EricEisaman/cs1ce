@@ -1,4 +1,4 @@
-import { equals , deepCopy , getDecendantProp } from "../../utils.js";
+import { equals , deepCopy , getDecendantProp } from "../../../utils.js";
 
 // Manages data requiring updating via the network.
 let StateManager;

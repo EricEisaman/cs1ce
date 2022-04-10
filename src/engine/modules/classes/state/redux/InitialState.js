@@ -2,6 +2,9 @@ export let InitialState = {
   app: {
     id: 1,
   },
+  rig: {
+    ready: false,
+  },
   cam: {
     ready: false,
   },

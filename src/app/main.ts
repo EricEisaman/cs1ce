@@ -1,4 +1,5 @@
-import { StateTest } from "./modules/classes/StateTest";
+//import { StateTest } from "./modules/classes/StateTest";
+import { NavmeshTest } from "./modules/classes/NavmeshTest";
 const CS1 = window.CS1; // We will eventually publish typedefs to be imported.
 let decimal: number = 6.0;
 let hex: number = 0xf00d;
@@ -12,8 +13,10 @@ let big: bigint = 100n;
     `The TypeScript number called decimal has a value of : ${decimal}!`
   );
   const main = () => {
-    const myStateTest = new StateTest();
-    myStateTest.run();
+    //const myStateTest = new StateTest();
+    const myNavmeshTest = new NavmeshTest();
+    //myStateTest.run();
+    myNavmeshTest.run();
   };
   /*
   await CS1.engine.config({
