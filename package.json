@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "cs1-game-server": "^0.0.36",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "mobx-state-tree": "^5.1.2"
   },
   "devDependencies": {
     "rollup-plugin-string": "^3.0.0",
@@ -29,7 +30,9 @@
     "tslib": "^2.3.1",
     "rimraf": "^3.0.2",
     "@rollup/plugin-typescript": "^8.3.0",
-    "@types/aframe": "^1.0.5"
+    "@types/aframe": "^1.0.5",
+    "mobx-devtools-mst": "^0.9.30",
+    "@types/mobx-devtools-mst": "^0.9.7"
   },
   "peerDependencies": {},
   "repository": {

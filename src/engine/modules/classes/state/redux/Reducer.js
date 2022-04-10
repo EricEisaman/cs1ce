@@ -1,4 +1,4 @@
-import { deepCopy, setDecendantProp } from "../../utils.js";
+import { deepCopy, setDecendantProp } from "../../../utils.js";
 /*
 The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
 

@@ -12,7 +12,7 @@ export const StateManager = {
 
 import { GlobalStore } from "./GlobalStore.js";
 const store = new GlobalStore(StateManager);
-import { uuid, equals, deepCopy, getDecendantProp } from "../../utils.js";
+import { uuid, equals, deepCopy, getDecendantProp } from "../../../utils.js";
 StateManager.getState = () => {
   return store.store.getState();
 };
