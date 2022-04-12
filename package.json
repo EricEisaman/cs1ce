@@ -1,47 +1,47 @@
 {
-  "name": "cs1-engine",
-  "version": "0.0.1",
-  "description": "CS1 Engine Community Edition.",
-  "main": "server/main.js",
-  "scripts": {
-    "start": "node server/main.js",
-    "engine": "npx rollup -c --environment PROD:false,BUILD_TYPE:engine; refresh",
-    "app": "npx rollup -c --environment PROD:false,BUILD_TYPE:app; refresh"
-  },
-  "engines": {
-    "node": "16.x"
-  },
-  "dependencies": {
-    "cs1-game-server": "^0.0.36",
-    "redux": "^4.1.2",
-    "mobx-state-tree": "^5.1.2"
-  },
-  "devDependencies": {
-    "rollup-plugin-string": "^3.0.0",
-    "rollup-plugin-css-only": "^3.1.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "@rollup/plugin-replace": "^3.0.1",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@rollup/plugin-json": "^4.1.0",
-    "npm-run-all": "^4.1.3",
-    "rollup": "^2.59.0",
-    "typescript": "^4.5.5",
-    "tslib": "^2.3.1",
-    "rimraf": "^3.0.2",
-    "@rollup/plugin-typescript": "^8.3.0",
-    "@types/aframe": "^1.0.5",
-    "mobx-devtools-mst": "^0.9.30",
-    "@types/mobx-devtools-mst": "^0.9.7"
-  },
-  "peerDependencies": {},
-  "repository": {
-    "url": "https://glitch.com/edit/#!/creative-core"
-  },
-  "license": "MIT",
-  "keywords": [
-    "node",
-    "glitch",
-    "cs1"
-  ]
+    "name": "cs1-engine",
+    "version": "0.0.1",
+    "description": "CS1 Engine Community Edition.",
+    "main": "server/main.js",
+    "scripts": {
+        "start": "node server/main.js",
+        "engine": "npx rollup -c --environment PROD:false,BUILD_TYPE:engine;",
+        "app": "npx rollup -c --environment PROD:false,BUILD_TYPE:app;"
+    },
+    "engines": {
+        "node": "16.x"
+    },
+    "dependencies": {
+        "mobx": "^6.5.0",
+        "mobx-state-tree": "^5.1.2",
+        "redux": "^4.1.2"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^21.0.1",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.0.6",
+        "@rollup/plugin-replace": "^3.0.1",
+        "@rollup/plugin-typescript": "^8.3.0",
+        "@types/aframe": "^1.0.5",
+        "@types/mobx-devtools-mst": "^0.9.7",
+        "mobx-devtools-mst": "^0.9.30",
+        "npm-run-all": "^4.1.3",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.59.0",
+        "rollup-plugin-css-only": "^3.1.0",
+        "rollup-plugin-string": "^3.0.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "tslib": "^2.3.1",
+        "typescript": "^4.5.5"
+    },
+    "peerDependencies": {},
+    "repository": {
+        "url": "https://glitch.com/edit/#!/creative-core"
+    },
+    "license": "MIT",
+    "keywords": [
+        "node",
+        "glitch",
+        "cs1"
+    ]
 }
