@@ -27,11 +27,15 @@ export class CS1Scene {
     } else {
       this.entity = document.createElement("a-scene");
     }
+    if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
+    this.entity.addEventListener('loaded', this.addRig.bind(this))
+    this.isReady = true;
+  }
+  
+  addRig() {
     console.log("ADDING CS1.rig.entity to CS1.scene");
     console.log(CS1.rig);
     this.entity.appendChild(CS1.rig.entity);
-    if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
-    this.isReady = true;
   }
 
   async add(arg) {

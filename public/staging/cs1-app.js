@@ -13,11 +13,12 @@
             box?.setAttribute("color", "yellow");
             box?.object3D.position.set(0, 1, -5);
             const map = document.createElement("a-gltf-model");
-            map.setAttribute("src", "https://cdn.glitch.global/a5d65106-3958-4418-bb95-17edbf2b08ae/map.glb?v=1649608846769");
+            map.setAttribute("src", "https://cdn.glitch.global/656c1d0b-a220-4a8c-8ecb-d01466ec202b/level_design_practice_1_complete.glb?v=1649347395645");
             map.setAttribute("id", "map");
             const navmesh = document.createElement("a-gltf-model");
-            navmesh.setAttribute("src", "https://cdn.glitch.global/a5d65106-3958-4418-bb95-17edbf2b08ae/navmesh%20(18).gltf?v=1649608988048");
+            navmesh.setAttribute("src", "https://cdn.glitch.global/656c1d0b-a220-4a8c-8ecb-d01466ec202b/navmesh%20(15).gltf?v=1649347490062");
             navmesh.id = "navmesh";
+            navmesh.setAttribute("visible", false);
             CS1$1.scene.entity.appendChild(map);
             CS1$1.scene.entity.appendChild(navmesh);
             //add a-cursor as child of camera

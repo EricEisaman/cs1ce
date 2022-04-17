@@ -146,7 +146,7 @@
     cdn : {
       AFRAME : "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
       simpleNavmeshConstraint : "https://cdn.jsdelivr.net/gh/rchovatiya88/simpleNavmeshConstraint/simpleNavmeshConstraint.js",
-      rigWASDControls: "https://cdn.jsdelivr.net/gh/EricEisaman/rigWASDControls@latest/rigWASDControls.js"
+      rigWASDControls: "https://cdn.jsdelivr.net/gh/EricEisaman/rigWASDControls@v0.0.03/rigWASDControls.js"
     }
   };
 
@@ -12688,11 +12688,15 @@
       } else {
         this.entity = document.createElement("a-scene");
       }
+      if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
+      this.entity.addEventListener('loaded', this.addRig.bind(this));
+      this.isReady = true;
+    }
+    
+    addRig() {
       console.log("ADDING CS1.rig.entity to CS1.scene");
       console.log(CS1.rig);
       this.entity.appendChild(CS1.rig.entity);
-      if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
-      this.isReady = true;
     }
 
     async add(arg) {
