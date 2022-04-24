@@ -20,6 +20,10 @@ export class CS1Cam {
       },
     });
   }
+  
+  setup() {
+    console.log("FAKING THE CAM SETUP!");
+  }
 
   setupCam() {
     console.log("Setting up cam.");

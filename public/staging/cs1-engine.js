@@ -12616,32 +12616,38 @@
       snapshotProcessor: snapshotProcessor
   };
 
+  let CS1$1;
   const RendererStateModel = types
       .model("RendererStateModel", {
-      ready: false
+      ready: false,
   })
       .actions((renderer) => ({
       setReady() {
           renderer.ready = true;
-      }
+          console.log("RENDERER READY!");
+          console.log(renderer);
+          CS1$1.cam.setup();
+      },
   }));
   const CamStateModel = types
       .model("CamStateModel", {
-      ready: false
+      ready: false,
   })
       .actions((cam) => ({
       setReady() {
           cam.ready = true;
-      }
+          console.log("CAM READY!");
+      },
   }));
   const SceneStateModel = types
       .model("SceneStateModel", {
-      ready: false
+      ready: false,
   })
       .actions((scene) => ({
       setReady() {
           scene.ready = true;
-      }
+          console.log("SCENE READY!");
+      },
   }));
   const EngineStateModel = types
       .model("EngineStateModel", {
@@ -12653,11 +12659,15 @@
       .actions((engine) => ({
       setReady() {
           engine.ready = true;
-      }
+      },
+      setEngine(cs1) {
+          CS1$1 = cs1;
+      },
   }));
   const EngineStateStore = EngineStateModel.create();
   // Listen to new snapshots, which are created anytime something changes
   onSnapshot(EngineStateStore, (snapshot) => {
+      console.log("SNAPSHOT");
       console.log(snapshot);
   });
 
@@ -12767,6 +12777,10 @@
         },
       });
     }
+    
+    setup() {
+      console.log("FAKING THE CAM SETUP!");
+    }
 
     setupCam() {
       console.log("Setting up cam.");
@@ -12827,6 +12841,7 @@
           run: () => { },
       });
       window.StateManager = StateManager;
+      EngineStateStore.setEngine(CS1);
       CS1.run = (main) => {
           const ready = StateManager.getState().engine.ready;
           console.log(`engine.ready state in CS1.run is ${ready}!`);
@@ -12854,6 +12869,9 @@
       console.log("The renderer is ready!!");
       await loadScript(registry.cdn.simpleNavmeshConstraint);
       await loadScript(registry.cdn.rigWASDControls);
+      //MST ACTION CALL
+      EngineStateStore.renderer.setReady();
+      // REDUX DISPATCH
       StateManager.dispatch({
           type: "path-mutation",
           payload: {
