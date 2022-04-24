@@ -52,6 +52,7 @@ other underlying frameworks.
     run: () => {},
   });
   window.StateManager = StateManager;
+  EngineStateStore.setEngine(CS1);
   CS1.run = (main) => {
     const ready = StateManager.getState().engine.ready;
     console.log(`engine.ready state in CS1.run is ${ready}!`);
@@ -78,6 +79,9 @@ other underlying frameworks.
   console.log("The renderer is ready!!");
   await loadScript(registry.cdn.simpleNavmeshConstraint);
   await loadScript(registry.cdn.rigWASDControls);
+  //MST ACTION CALL
+  EngineStateStore.renderer.setReady();
+  // REDUX DISPATCH
   StateManager.dispatch({
     type: "path-mutation",
     payload: {

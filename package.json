@@ -14,7 +14,8 @@
   "dependencies": {
     "cs1-game-server": "^0.0.36",
     "redux": "^4.1.2",
-    "mobx-state-tree": "^5.1.2"
+    "mobx-state-tree": "^5.1.2",
+    "mobx": "^6.5.0"
   },
   "devDependencies": {
     "rollup-plugin-string": "^3.0.0",
