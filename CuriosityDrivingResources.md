@@ -46,6 +46,8 @@
 
 [mst-persist](https://github.com/agilgur5/mst-persist)
 
+[mst vs redux](https://youtu.be/76FRrbY18Bs)
+
 ---
 
 ### Data Transport
