@@ -4,22 +4,10 @@ import { EngineStateStore } from "./state/mst/EngineStateStore"
 //import { follow } from "./components/follow";
 export class CS1Scene {
   constructor() {
-    this.isReady = false;
-    const subId = StateManager.subscribe("rig.ready", () => {
-      StateManager.unsubscribe(subId);
-      this.setupScene();
-      StateManager.dispatch({
-        type: "path-mutation",
-        payload: {
-          path: "engine.ready",
-          value: true,
-        },
-      });
-    });
+
   }
 
-  setupScene() {
-    if(this.isReady) return;
+  setup() {
     if (window.AFRAME?.scenes[0]) {
       this.entity = window.AFRAME?.scenes[0];
       const cam = document.querySelector("[camera]");
@@ -29,13 +17,13 @@ export class CS1Scene {
     }
     if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
     this.entity.addEventListener('loaded', this.addRig.bind(this))
-    this.isReady = true;
   }
   
   addRig() {
     console.log("ADDING CS1.rig.entity to CS1.scene");
     console.log(CS1.rig);
     this.entity.appendChild(CS1.rig.entity);
+    EngineStateStore.scene.setReady();
   }
 
   async add(arg) {

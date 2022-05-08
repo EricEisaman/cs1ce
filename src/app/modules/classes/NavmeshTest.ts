@@ -14,12 +14,10 @@ declare global {
   interface Window {
     box: any;
     CS1: any;
-    StateManager: any;
   }
 }
 
 const CS1 = window.CS1;
-const StateManager = window.StateManager;
 
 export class NavmeshTest {
   constructor() {}
@@ -50,20 +48,9 @@ export class NavmeshTest {
     //add navmesh constraint to camera
     CS1.cam.entity.setAttribute("simple-navmesh-constraint", "navmesh:#navmesh;fall:0.5;height:1.65;");
     box.addEventListener("click", (e) => {
-      StateManager.dispatch({
-        type: "path-mutation",
-        payload: {
-          path: "house.rooms.bathroom.locked",
-          value: box.getAttribute("color") === "green" ? false : true,
-        },
-      });
+      console.log("The box was clicked!");
     });
 
-    StateManager.subscribe("house.rooms.bathroom.locked", () => {
-      box.setAttribute(
-        "color",
-        box.getAttribute("color") === "green" ? "red" : "green"
-      );
-    });
+    
   }
 }

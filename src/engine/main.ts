@@ -2,8 +2,12 @@ interface CS1 {
   cam: any;
   rig: any;
   scene: any;
+  renderer: any;
+  ecs: any;
   run: any;
   config: any;
+  runAppEntryPoint: any;
+  state: any;
 }
 
 import {
@@ -27,14 +31,13 @@ declare global {
   }
 }
 
-import { loadScript } from "./modules/utils.js";
-import { registry } from "./modules/registry.js";
 import { CS1Scene } from "./modules/classes/CS1Scene.js";
 import { CS1Cam } from "./modules/classes/CS1Cam.js";
 import { CS1Rig } from "./modules/classes/CS1Rig.js";
 import { StateManager } from "./modules/classes/state/redux/StateManager.js";
 import { EngineStateStore } from "./modules/classes/state/mst/EngineStateStore";
-window.EngineStateStore = EngineStateStore;
+import { renderer } from "./modules/renderer";
+import { config } from "./modules/config";
 /*
 CS1 pattern for wrapping A-Frame entities
 CS1.<name> is the CS1 wrapper with convenience methods and properties
@@ -48,45 +51,38 @@ other underlying frameworks.
     cam: {},
     rig: {},
     scene: {},
+    renderer: {},
+    ecs: {},
     config: () => {},
     run: () => {},
+    runAppEntryPoint: () => {},
+    state: {}
   });
-  window.StateManager = StateManager;
+  let appEntryPoint;
+  CS1.runAppEntryPoint = ()=>{
+    if(appEntryPoint){
+      appEntryPoint();
+    }else{
+      console.error("appEntryPoint should have been already called. It is undefined in this scope.");
+    }
+  }
   EngineStateStore.setEngine(CS1);
+  CS1.state = EngineStateStore;
   CS1.run = (main) => {
-    const ready = StateManager.getState().engine.ready;
+    const ready = EngineStateStore.ready;
     console.log(`engine.ready state in CS1.run is ${ready}!`);
     if (ready) {
       console.log("Calling app main() from CS1!");
       main();
+      delete CS1.config;
     } else {
-      console.log("Subscribing to engine.ready in CS1.run!");
-      const subId = StateManager.subscribe("engine.ready", () => {
-        StateManager.unsubscribe(subId);
-        console.log("engine.ready handler is firing!");
-        console.log("Calling app main() from CS1!");
-        main(); 
-      });
+      appEntryPoint = main;
     }
   };
   console.log("Instantiating CS1 Cam, Rig, and Scene");
   CS1.cam = new CS1Cam();
   CS1.rig = new CS1Rig();
   CS1.scene = new CS1Scene();
-  await loadScript(registry.cdn.AFRAME);
-  console.log("AFRAME :");
-  console.log(window.AFRAME);
-  console.log("The renderer is ready!!");
-  await loadScript(registry.cdn.simpleNavmeshConstraint);
-  await loadScript(registry.cdn.rigWASDControls);
-  //MST ACTION CALL
-  EngineStateStore.renderer.setReady();
-  // REDUX DISPATCH
-  StateManager.dispatch({
-    type: "path-mutation",
-    payload: {
-      path: "renderer.ready",
-      value: true,
-    },
-  });
+  CS1.renderer = renderer;
+  CS1.renderer.init();
 })();

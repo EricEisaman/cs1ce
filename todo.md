@@ -2,6 +2,17 @@
 
 - First Steps
 
+  - CS1Cam lookAt
+    - Good case to examine options for branching based upon the current
+    renderer, ecs, ...
+    
+  - Need to decide how users are going to add state stores (MST Models) and how
+  are they going to fit into the global state topology.
+  
+  - Think about, blog about, entities and how they will be accessed and activated.
+    - npc's like a tower defense cannon
+    - rpg player that is of class goblin vs class knight
+    
   - ~~Review CS1 API boundary concept in context of CS1 app design~~
   - Create basic CS1 reactive store API wrapping redux
     - Review state management progress

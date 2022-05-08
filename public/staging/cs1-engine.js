@@ -1,155 +1,6 @@
 (function () {
   'use strict';
 
-  const utils = {
-    loadScript: function (url, test) {
-      return new Promise(function (resolve, reject) {
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.addEventListener("load", function () {
-          this.removeEventListener("load", this);
-          if (test) {
-            utils.resolveWhenTrue(resolve, reject, test);
-          } else {
-            console.log("Resolving loadScript in utils!");
-            resolve();
-          }
-        });
-        script.src = url;
-        head.appendChild(script);
-      });
-    },
-
-    resolveWhenTrue: function (resolve, reject, test) {
-      let count = 0;
-      setTimeout(() => {
-        if (test) {
-          resolve();
-        } else if (count < 1000) {
-          utils.resolveWhenTrue(resolve, test);
-          count++;
-        } else {
-          reject(test);
-        }
-      }, 200);
-    },
-
-    uuid: function () {
-      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-        (
-          c ^
-          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-        ).toString(16)
-      );
-    },
-
-    equals: function (a, b) {
-      var typeofa, typeofb, i, len, key;
-
-      // If a and b refer to the same object then they are equal.
-      if (a === b) return true;
-
-      // Get the native type of both a and b. Use the built-in valueOf()
-      // function to get the native object of each variable.
-      typeofa = a === null ? "null" : typeof (a = a ? a.valueOf() : a);
-      typeofb = b === null ? "null" : typeof (b = b ? b.valueOf() : b);
-
-      // If a and b are not the same native type.
-      if (typeofa !== typeofb) return false;
-
-      switch (typeofa) {
-        case "string":
-        case "boolean":
-        case "number":
-        case "functon":
-        case "undefined":
-        case "null":
-          return a === b;
-      }
-
-      // Convert the native type to a string. This allows us to test
-      // if either a or b are Arrays and then handle accordingly.
-      typeofa = {}.toString.call(a);
-      typeofb = {}.toString.call(b);
-
-      if (typeofa === typeofb) {
-        // Compare the items of two arrays
-        if (typeofa === "[object Array]") {
-          if (a.length !== b.length) return false;
-
-          len = a.length;
-          for (i = 0; i < len; i++) {
-            if (!utils.equals(a[i], b[i])) return false;
-          }
-          // Compare the keys of two objects
-        } else {
-          for (key in a) {
-            if (!(key in b)) return false;
-
-            if (!utils.equals(a[key], b[key])) return false;
-          }
-        }
-      } else {
-        return false;
-      }
-
-      return true;
-    },
-
-    deepCopy: (inObject) => {
-      let outObject, value, key;
-
-      if (typeof inObject !== "object" || inObject === null) {
-        return inObject; // Return the value if inObject is not an object
-      }
-
-      // Create an array or object to hold the values
-      outObject = Array.isArray(inObject) ? [] : {};
-
-      for (key in inObject) {
-        value = inObject[key];
-
-        // Recursively (deep) copy for nested objects, including arrays
-        outObject[key] = utils.deepCopy(value);
-      }
-
-      return outObject;
-    },
-
-    getDecendantProp: function (obj, desc) {
-      var arr = desc.split(".");
-      while (arr.length) {
-        obj = obj[arr.shift()];
-      }
-      return obj;
-    },
-
-    setDecendantProp: function (obj, desc, value) {
-      var arr = desc.split(".");
-      while (arr.length > 1) {
-        obj = obj[arr.shift()];
-      }
-      return (obj[arr[0]] = value);
-    },
-  };
-
-  const uuid = utils.uuid;
-  const loadScript = utils.loadScript;
-  const equals = utils.equals;
-  const deepCopy = utils.deepCopy;
-  const getDecendantProp = utils.getDecendantProp;
-  const setDecendantProp = utils.setDecendantProp;
-
-  const registry = {
-    npm : {},
-    cdn : {
-      AFRAME : "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-      simpleNavmeshConstraint : "https://cdn.jsdelivr.net/gh/rchovatiya88/simpleNavmeshConstraint/simpleNavmeshConstraint.js",
-      rigWASDControls: "https://cdn.jsdelivr.net/gh/EricEisaman/rigWASDControls@v0.0.03/rigWASDControls.js"
-    }
-  };
-
   /**
    * Adapted from React: https://github.com/facebook/react/blob/master/packages/shared/formatProdErrorMessage.js
    *
@@ -472,6 +323,146 @@
       replaceReducer: replaceReducer
     }, _ref2[$$observable] = observable, _ref2;
   }
+
+  const utils = {
+    loadScript: function (url, test) {
+      return new Promise(function (resolve, reject) {
+        var head = document.getElementsByTagName("head")[0];
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.addEventListener("load", function () {
+          this.removeEventListener("load", this);
+          if (test) {
+            utils.resolveWhenTrue(resolve, reject, test);
+          } else {
+            console.log("Resolving loadScript in utils!");
+            resolve();
+          }
+        });
+        script.src = url;
+        head.appendChild(script);
+      });
+    },
+
+    resolveWhenTrue: function (resolve, reject, test) {
+      let count = 0;
+      setTimeout(() => {
+        if (test) {
+          resolve();
+        } else if (count < 1000) {
+          utils.resolveWhenTrue(resolve, test);
+          count++;
+        } else {
+          reject(test);
+        }
+      }, 200);
+    },
+
+    uuid: function () {
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (
+          c ^
+          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+        ).toString(16)
+      );
+    },
+
+    equals: function (a, b) {
+      var typeofa, typeofb, i, len, key;
+
+      // If a and b refer to the same object then they are equal.
+      if (a === b) return true;
+
+      // Get the native type of both a and b. Use the built-in valueOf()
+      // function to get the native object of each variable.
+      typeofa = a === null ? "null" : typeof (a = a ? a.valueOf() : a);
+      typeofb = b === null ? "null" : typeof (b = b ? b.valueOf() : b);
+
+      // If a and b are not the same native type.
+      if (typeofa !== typeofb) return false;
+
+      switch (typeofa) {
+        case "string":
+        case "boolean":
+        case "number":
+        case "functon":
+        case "undefined":
+        case "null":
+          return a === b;
+      }
+
+      // Convert the native type to a string. This allows us to test
+      // if either a or b are Arrays and then handle accordingly.
+      typeofa = {}.toString.call(a);
+      typeofb = {}.toString.call(b);
+
+      if (typeofa === typeofb) {
+        // Compare the items of two arrays
+        if (typeofa === "[object Array]") {
+          if (a.length !== b.length) return false;
+
+          len = a.length;
+          for (i = 0; i < len; i++) {
+            if (!utils.equals(a[i], b[i])) return false;
+          }
+          // Compare the keys of two objects
+        } else {
+          for (key in a) {
+            if (!(key in b)) return false;
+
+            if (!utils.equals(a[key], b[key])) return false;
+          }
+        }
+      } else {
+        return false;
+      }
+
+      return true;
+    },
+
+    deepCopy: (inObject) => {
+      let outObject, value, key;
+
+      if (typeof inObject !== "object" || inObject === null) {
+        return inObject; // Return the value if inObject is not an object
+      }
+
+      // Create an array or object to hold the values
+      outObject = Array.isArray(inObject) ? [] : {};
+
+      for (key in inObject) {
+        value = inObject[key];
+
+        // Recursively (deep) copy for nested objects, including arrays
+        outObject[key] = utils.deepCopy(value);
+      }
+
+      return outObject;
+    },
+
+    getDecendantProp: function (obj, desc) {
+      var arr = desc.split(".");
+      while (arr.length) {
+        obj = obj[arr.shift()];
+      }
+      return obj;
+    },
+
+    setDecendantProp: function (obj, desc, value) {
+      var arr = desc.split(".");
+      while (arr.length > 1) {
+        obj = obj[arr.shift()];
+      }
+      return (obj[arr[0]] = value);
+    },
+  };
+
+  const uuid = utils.uuid;
+  const loadScript = utils.loadScript;
+  const equals = utils.equals;
+  const deepCopy = utils.deepCopy;
+  const getDecendantProp = utils.getDecendantProp;
+  const setDecendantProp = utils.setDecendantProp;
 
   /*
   The intention of the reactions is to provide a dynamic middleware as opposed to the default redux middleware dispatch wrapper.
@@ -12637,6 +12628,18 @@
       setReady() {
           cam.ready = true;
           console.log("CAM READY!");
+          CS1$1.rig.setup();
+      },
+  }));
+  const RigStateModel = types
+      .model("RigStateModel", {
+      ready: false,
+  })
+      .actions((rig) => ({
+      setReady() {
+          rig.ready = true;
+          console.log("RIG READY!");
+          CS1$1.scene.setup();
       },
   }));
   const SceneStateModel = types
@@ -12647,22 +12650,28 @@
       setReady() {
           scene.ready = true;
           console.log("SCENE READY!");
+          EngineStateStore.setReady();
       },
   }));
   const EngineStateModel = types
       .model("EngineStateModel", {
       renderer: RendererStateModel,
       cam: CamStateModel,
+      rig: RigStateModel,
       scene: SceneStateModel,
       ready: false
   })
       .actions((engine) => ({
       setReady() {
           engine.ready = true;
+          console.log("CS1 Engine is READY!");
+          CS1$1.runAppEntryPoint();
+          delete (CS1$1.runAppEntryPoint);
+          delete (CS1$1.config);
       },
       setEngine(cs1) {
           CS1$1 = cs1;
-      },
+      }
   }));
   const EngineStateStore = EngineStateModel.create();
   // Listen to new snapshots, which are created anytime something changes
@@ -12675,22 +12684,10 @@
   //import { follow } from "./components/follow";
   class CS1Scene {
     constructor() {
-      this.isReady = false;
-      const subId = StateManager.subscribe("rig.ready", () => {
-        StateManager.unsubscribe(subId);
-        this.setupScene();
-        StateManager.dispatch({
-          type: "path-mutation",
-          payload: {
-            path: "engine.ready",
-            value: true,
-          },
-        });
-      });
+
     }
 
-    setupScene() {
-      if(this.isReady) return;
+    setup() {
       if (window.AFRAME?.scenes[0]) {
         this.entity = window.AFRAME?.scenes[0];
         const cam = document.querySelector("[camera]");
@@ -12700,13 +12697,13 @@
       }
       if (!window.AFRAME?.scenes[0]) document.body.appendChild(this.entity);
       this.entity.addEventListener('loaded', this.addRig.bind(this));
-      this.isReady = true;
     }
     
     addRig() {
       console.log("ADDING CS1.rig.entity to CS1.scene");
       console.log(CS1.rig);
       this.entity.appendChild(CS1.rig.entity);
+      EngineStateStore.scene.setReady();
     }
 
     async add(arg) {
@@ -12760,59 +12757,34 @@
 
   class CS1Cam {
     constructor() {
-      const subId = StateManager.subscribe("renderer.ready", () => {
-          StateManager.unsubscribe(subId);
-          this.setupCam();
-          this.announceReady();     
-      });
+      
     }
 
-    announceReady() {
-      console.log("Announcing cam.ready!");
-      StateManager.dispatch({
-        type: "path-mutation",
-        payload: {
-          path: "cam.ready",
-          value: true,
-        },
-      });
-    }
     
     setup() {
-      console.log("FAKING THE CAM SETUP!");
-    }
-
-    setupCam() {
       console.log("Setting up cam.");
       this.entity = document.createElement("a-entity");
       this.entity.name = "CS1 Cam Entity";
       this.entity.setAttribute("camera", "active:true");
       this.entity.setAttribute("position", "0 1.65 0");
       this.entity.setAttribute("look-controls", "pointerLockEnabled: true");
+      EngineStateStore.cam.setReady();
+      
     }
+    
+    lookAt(pos) {
+      
+    }
+
   }
 
   class CS1Rig {
     constructor() {
-      const subId = StateManager.subscribe("cam.ready", () => {
-          StateManager.unsubscribe(subId);
-          this.setupRig();
-          this.announceReady();     
-      });
+      
     }
 
-    announceReady() {
-      console.log("Announcing rig.ready!");
-      StateManager.dispatch({
-        type: "path-mutation",
-        payload: {
-          path: "rig.ready",
-          value: true,
-        },
-      });
-    }
-
-    setupRig() {
+    
+    setup() {
       console.log("Setting up rig.");
       this.entity = document.createElement("a-entity");
       this.entity.name = "CS1 Rig Entity";
@@ -12820,10 +12792,45 @@
       console.log(CS1.cam.entity);
       this.entity.appendChild(CS1.cam.entity);
       this.entity.setAttribute("rig-wasd-controls", "");
+      EngineStateStore.rig.setReady();
     }
   }
 
-  window.EngineStateStore = EngineStateStore;
+  const registry = {
+    npm : {},
+    cdn : {
+      AFRAME : "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+      simpleNavmeshConstraint : "https://cdn.jsdelivr.net/gh/rchovatiya88/simpleNavmeshConstraint/simpleNavmeshConstraint.js",
+      rigWASDControls: "https://cdn.jsdelivr.net/gh/EricEisaman/rigWASDControls@v0.0.03/rigWASDControls.js"
+    }
+  };
+
+  /*
+  This will eventually allow an isomorphic set of functions which
+  can be run across several supported renderers including Three.js
+  and Babylon.js.
+  */
+  const renderer = {
+      init: async function () {
+          console.log("Time to init the renderer!");
+          await loadScript(registry.cdn.AFRAME);
+          console.log("AFRAME :");
+          console.log(window.AFRAME);
+          console.log("The renderer is ready!!");
+          renderer.type = "AFRAME";
+          // THESE SHOULD NOT BE HERE!!!
+          await loadScript(registry.cdn.simpleNavmeshConstraint);
+          await loadScript(registry.cdn.rigWASDControls);
+          //MST ACTION CALL
+          CS1$1.state.renderer.setReady();
+          deleteInit();
+      },
+      type: ""
+  };
+  function deleteInit() {
+      delete renderer.init;
+  }
+
   /*
   CS1 pattern for wrapping A-Frame entities
   CS1.<name> is the CS1 wrapper with convenience methods and properties
@@ -12837,48 +12844,42 @@
           cam: {},
           rig: {},
           scene: {},
+          renderer: {},
+          ecs: {},
           config: () => { },
           run: () => { },
+          runAppEntryPoint: () => { },
+          state: {}
       });
-      window.StateManager = StateManager;
+      let appEntryPoint;
+      CS1.runAppEntryPoint = () => {
+          if (appEntryPoint) {
+              appEntryPoint();
+          }
+          else {
+              console.error("appEntryPoint should have been already called. It is undefined in this scope.");
+          }
+      };
       EngineStateStore.setEngine(CS1);
+      CS1.state = EngineStateStore;
       CS1.run = (main) => {
-          const ready = StateManager.getState().engine.ready;
+          const ready = EngineStateStore.ready;
           console.log(`engine.ready state in CS1.run is ${ready}!`);
           if (ready) {
               console.log("Calling app main() from CS1!");
               main();
+              delete CS1.config;
           }
           else {
-              console.log("Subscribing to engine.ready in CS1.run!");
-              const subId = StateManager.subscribe("engine.ready", () => {
-                  StateManager.unsubscribe(subId);
-                  console.log("engine.ready handler is firing!");
-                  console.log("Calling app main() from CS1!");
-                  main();
-              });
+              appEntryPoint = main;
           }
       };
       console.log("Instantiating CS1 Cam, Rig, and Scene");
       CS1.cam = new CS1Cam();
       CS1.rig = new CS1Rig();
       CS1.scene = new CS1Scene();
-      await loadScript(registry.cdn.AFRAME);
-      console.log("AFRAME :");
-      console.log(window.AFRAME);
-      console.log("The renderer is ready!!");
-      await loadScript(registry.cdn.simpleNavmeshConstraint);
-      await loadScript(registry.cdn.rigWASDControls);
-      //MST ACTION CALL
-      EngineStateStore.renderer.setReady();
-      // REDUX DISPATCH
-      StateManager.dispatch({
-          type: "path-mutation",
-          payload: {
-              path: "renderer.ready",
-              value: true,
-          },
-      });
+      CS1.renderer = renderer;
+      CS1.renderer.init();
   })();
 
 })();
